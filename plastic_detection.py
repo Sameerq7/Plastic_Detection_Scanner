@@ -16,7 +16,7 @@ plastic_detected_audio = 'C:/Users/hp/Desktop/Plastic_detection/audio/Plastic_de
 no_plastic_audio = 'C:/Users/hp/Desktop/Plastic_detection/audio/NO_plastic.mp3'
 
 # Define a list of object classes related to plastic
-plastic_classes = ['bottle', 'cup', 'cover', 'wrapper', 'bag', 'can', 'container','cell phone','remote']
+plastic_classes = ['bottle', 'cup', 'cover', 'wrapper', 'bag', 'can', 'container', 'cell phone', 'remote', 'toilet']
 
 # Event for stopping the detection
 stop_event = Event()
@@ -26,6 +26,7 @@ def detect_plastic():
     last_detection_time = time.time()
     last_plastic_sound_time = time.time()
     print("Detection started")
+    
     while not stop_event.is_set():
         ret, frame = cap.read()
         if not ret:
@@ -45,20 +46,24 @@ def detect_plastic():
         for box, score, class_id in zip(boxes, scores, boxes[:, 5].astype(int)):
             x1, y1, x2, y2, _, _ = box
             label = f'{class_ids[class_id]} {score:.2f}'
+
             if class_ids[class_id] in plastic_classes:
+                # Show just "Plastic Detected" for plastic-related objects
                 cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 2)
-                cv2.putText(frame, label, (int(x1), int(y1) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                cv2.putText(frame, "Plastic Detected", (int(x1), int(y1) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
                 plastic_detected = True
             else:
+                # Display non-plastic objects with their label
                 cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 0, 255), 2)
                 cv2.putText(frame, label, (int(x1), int(y1) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
-        # Play sounds
+        # Play sound when plastic is detected
         if plastic_detected and time.time() - last_plastic_sound_time >= 5:
             pygame.mixer.music.load(plastic_detected_audio)
             pygame.mixer.music.play()
             last_plastic_sound_time = time.time()
 
+        # Play sound when no plastic is detected for a while
         if not plastic_detected and time.time() - last_detection_time >= 15:
             pygame.mixer.music.load(no_plastic_audio)
             pygame.mixer.music.play()
@@ -74,4 +79,3 @@ def detect_plastic():
 
 def stop_detection():
     stop_event.set()
-
