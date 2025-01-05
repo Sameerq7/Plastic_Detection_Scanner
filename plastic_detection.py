@@ -1,3 +1,4 @@
+import os
 import cv2
 import torch
 import numpy as np
@@ -5,8 +6,9 @@ import time
 import pygame
 from threading import Event
 
-# Initialize pygame mixer for sound
-pygame.mixer.init()
+# Initialize pygame mixer for sound if audio is available
+if os.getenv('RENDER') is None:  # assuming 'RENDER' is not set in Render environment
+    pygame.mixer.init()
 
 # Load a pre-trained model (YOLOv5 for object detection)
 model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
@@ -58,13 +60,13 @@ def detect_plastic():
                 cv2.putText(frame, label, (int(x1), int(y1) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
         # Play sound when plastic is detected
-        if plastic_detected and time.time() - last_plastic_sound_time >= 5:
+        if plastic_detected and time.time() - last_plastic_sound_time >= 5 and os.getenv('RENDER') is None:
             pygame.mixer.music.load(plastic_detected_audio)
             pygame.mixer.music.play()
             last_plastic_sound_time = time.time()
 
         # Play sound when no plastic is detected for a while
-        if not plastic_detected and time.time() - last_detection_time >= 15:
+        if not plastic_detected and time.time() - last_detection_time >= 15 and os.getenv('RENDER') is None:
             pygame.mixer.music.load(no_plastic_audio)
             pygame.mixer.music.play()
             last_detection_time = time.time()
