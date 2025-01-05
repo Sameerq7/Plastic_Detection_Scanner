@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plastic Detection System</title>
+    <!-- Favicon -->
+    <link rel="icon" href="static/images/Favicon.png" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Google Fonts for better fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7fc;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            animation: fadeIn 2s ease-out;
+        }
+        h1 {
+            color: #11BC74;
+            font-size: 3em;
+            margin-top: 20px;
+            animation: slideIn 1.5s ease-out;
+        }
+        .tagline {
+            font-size: 1.2em;
+            margin-top: 15px;
+            color: #555;
+            animation: fadeIn 2s ease-out;
+        }
+        .buttons {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            animation: fadeIn 2s ease-out;
+        }
+        .scan-button {
+            background-color: #11BC74;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .scan-button:hover {
+            background-color: #0e9c5a;
+            transform: scale(1.1);
+        }
+        .scan-status {
+            margin-top: 30px;
+            font-size: 1.2em;
+            animation: fadeIn 2s ease-out;
+        }
+        .scan-status span {
+            color: #11BC74;
+        }
+        .debug-log {
+            margin-top: 50px;
+            text-align: left;
+            background-color: #ffffff;
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            animation: slideUp 1.5s ease-out;
+        }
+        #logList {
+            list-style: none;
+            padding-left: 0;
+        }
+        #logList li {
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        footer {
+            margin-top: 50px;
+            background-color: #11BC74;
+            color: white;
+            padding: 20px;
+            font-size: 1.1em;
+            animation: fadeIn 2s ease-out;
+        }
+        footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        .prompt {
+            margin-top: 30px;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #11BC74;
+            animation: fadeIn 2s ease-out;
+        }
+        .prompt span {
+            color: #0e9c5a;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Container -->
+    <div class="container">
+        <h1>Plastic Detection System</h1>
+        <div class="tagline">
+            <p>Working towards a cleaner, greener future by detecting and recycling plastic waste.</p>
+        </div>
+
+        <div class="prompt">
+            <p><span>Waste Management</span> is vital to reduce plastic pollution. Join us in recycling plastic materials!</p>
+        </div>
+
+        <!-- Buttons Section -->
+        <div class="buttons">
+            <button id="startScan" class="scan-button">Start Scan</button>
+            <button id="stopScan" class="scan-button">Stop Scan</button>
+        </div>
+
+        <!-- Scan Status Section -->
+        <div class="scan-status">
+            <p id="status">Status: <span id="statusText">Waiting to start scan...</span></p>
+        </div>
+
+        <!-- Debug Log Section -->
+        <div id="debugLog" class="debug-log">
+            <h3>Debug Log</h3>
+            <ul id="logList"></ul>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>Created by <strong>Shaik Sameer Hussain</strong></p>
+            <p>GitHub: <a href="https://github.com/Sameerq7" target="_blank">Sameerq7</a></p>
+            <p>LinkedIn: <a href="https://www.linkedin.com/in/shaik-sameer-hussain-b88323250/" target="_blank">Shaik Sameer Hussain</a></p>
+        </footer>
+    </div>
+
+    <script>
+        // Function to log debug messages to the page
+        function logMessage(message) {
+            const logList = document.getElementById('logList');
+            const logItem = document.createElement('li');
+            logItem.textContent = message;
+            logList.appendChild(logItem);
+        }
+
+        // Start scanning
+        document.getElementById('startScan').addEventListener('click', () => {
+            fetch('/start_scan')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('statusText').innerText = data.status;
+                    logMessage('Start scan response: ' + JSON.stringify(data));
+                })
+                .catch(error => {
+                    console.error('Error starting scan:', error);
+                    logMessage('Error starting scan: ' + error.message);
+                });
+        });
+
+        // Stop scanning
+        document.getElementById('stopScan').addEventListener('click', () => {
+            fetch('/stop_scan')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('statusText').innerText = data.status;
+                    logMessage('Stop scan response: ' + JSON.stringify(data));
+                })
+                .catch(error => {
+                    console.error('Error stopping scan:', error);
+                    logMessage('Error stopping scan: ' + error.message);
+                });
+        });
+    </script>
+</body>
+</html>
