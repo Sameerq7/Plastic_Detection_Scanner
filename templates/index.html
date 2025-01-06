@@ -161,6 +161,7 @@
         <div class="buttons">
             <button id="startScan" class="scan-button">Start Scan</button>
             <button id="stopScan" class="scan-button">Stop Scan</button>
+            <button id="uploadButton" class="scan-button">Upload Image for Analysis</button>
         </div>
 
         <!-- Scan Status Section -->
@@ -175,49 +176,48 @@
         </div>
 
         <!-- Footer -->
-        <footer>
-            <p>Created by <strong>Shaik Sameer Hussain</strong></p>
-            <p>GitHub: <a href="https://github.com/Sameerq7" target="_blank">Sameerq7</a></p>
-            <p>LinkedIn: <a href="https://www.linkedin.com/in/shaik-sameer-hussain-b88323250/" target="_blank">Shaik Sameer Hussain</a></p>
-        </footer>
-    </div>
-
-    <script>
-        // Function to log debug messages to the page
-        function logMessage(message) {
-            const logList = document.getElementById('logList');
-            const logItem = document.createElement('li');
-            logItem.textContent = message;
-            logList.appendChild(logItem);
-        }
-
-        // Start scanning
-        document.getElementById('startScan').addEventListener('click', () => {
-            fetch('/start_scan')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('statusText').innerText = data.status;
-                    logMessage('Start scan response: ' + JSON.stringify(data));
-                })
-                .catch(error => {
-                    console.error('Error starting scan:', error);
-                    logMessage('Error starting scan: ' + error.message);
-                });
-        });
-
-        // Stop scanning
-        document.getElementById('stopScan').addEventListener('click', () => {
-            fetch('/stop_scan')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('statusText').innerText = data.status;
-                    logMessage('Stop scan response: ' + JSON.stringify(data));
-                })
-                .catch(error => {
-                    console.error('Error stopping scan:', error);
-                    logMessage('Error stopping scan: ' + error.message);
-                });
-        });
-    </script>
+        <script>
+            // Function to log debug messages to the page
+            function logMessage(message) {
+                const logList = document.getElementById('logList');
+                const logItem = document.createElement('li');
+                logItem.textContent = message;
+                logList.appendChild(logItem);
+            }
+        
+            // Start scanning
+            document.getElementById('startScan').addEventListener('click', () => {
+                fetch('/start_scan')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('statusText').innerText = data.status;
+                        logMessage('Start scan response: ' + JSON.stringify(data));
+                    })
+                    .catch(error => {
+                        console.error('Error starting scan:', error);
+                        logMessage('Error starting scan: ' + error.message);
+                    });
+            });
+        
+            // Stop scanning
+            document.getElementById('stopScan').addEventListener('click', () => {
+                fetch('/stop_scan')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('statusText').innerText = data.status;
+                        logMessage('Stop scan response: ' + JSON.stringify(data));
+                    })
+                    .catch(error => {
+                        console.error('Error stopping scan:', error);
+                        logMessage('Error stopping scan: ' + error.message);
+                    });
+            });
+        
+            // Redirect to upload page
+            document.getElementById('uploadButton').addEventListener('click', () => {
+                window.location.href = '/upload';
+            });
+        </script>
+        
 </body>
 </html>

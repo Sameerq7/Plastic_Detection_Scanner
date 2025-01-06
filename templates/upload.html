@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="static/images/Favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Upload Image</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7fc;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        h1 {
+            color: #11BC74;
+            font-size: 2.5em;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .form-container input[type="file"] {
+            margin: 15px 0;
+            padding: 10px;
+            font-size: 1em;
+        }
+
+        .form-container button {
+            background-color: #11BC74;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .form-container button:hover {
+            background-color: #0e9c5a;
+            transform: scale(1.05);
+        }
+
+        .result {
+            margin-top: 30px;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .result h2 {
+            color: #11BC74;
+            font-weight: 600;
+        }
+
+        .result img {
+            max-width: 100%;
+            height: auto;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .result h3 {
+            color: #333;
+            margin: 20px 0 10px;
+            font-weight: 400;
+            font-size: 2.2em;
+        }
+
+        .result p {
+            font-size: 1.2em;
+            color: #555;
+            line-height: 2em;
+        }
+
+        .celebration {
+            font-size: 2em;
+            color: #0e9c5a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .red-flag {
+            font-size: 2em;
+            color: red;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 1em;
+            color: #555;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Upload an Image to Check if it is Usable for Pyrolysis</h1>
+
+    <div class="form-container">
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+            <label for="file">Choose image:</label>
+            <input type="file" name="file" id="file" accept="image/*" required>
+            <button type="submit">Upload</button>
+        </form>
+    </div>
+
+    <!-- Only show the analysis result and image if the file is uploaded and processed -->
+    {% if filename %}
+    <div class="result">
+        <h2>Uploaded Image:</h2>
+        <img src="{{ url_for('uploaded_file', filename=filename) }}" alt="Uploaded Image">
+
+        <h3>Analysis Result:</h3>
+        <p>{{ result }}</p>
+
+        {% if 'combustion' in result.lower() %}
+        <div class="celebration">
+            🎉🎉 This material is suitable for pyrolysis! 🎉🎉
+        </div>
+        {% else %}
+        <div class="red-flag">
+            🚫This material is NOT suitable for pyrolysis.🚫
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</body>
+
+</html>
