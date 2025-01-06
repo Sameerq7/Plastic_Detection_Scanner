@@ -1,6 +1,3 @@
-
-
-```markdown
 # Pyrolysis Material Analyzer
 
 A web application that analyzes uploaded images to determine whether the material is suitable for pyrolysis. This project uses **YOLOv5** for object detection and identifies specific plastic-related objects to assess suitability.
@@ -35,7 +32,7 @@ A web application that analyzes uploaded images to determine whether the materia
    ```bash
    git clone <repository-url>
    cd <repository-folder>
-   ```
+ ```
 
 2. Create a virtual environment:
    ```bash
