@@ -35,11 +35,10 @@ A web application that analyzes uploaded images to determine whether the materia
  ```
 
 2. Create a virtual environment:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
 
+    python -m venv venv
+    source venv/bin/activate  # On Windows: venv\Scripts\activate
+    
 3. Install dependencies:
    ```bash
    pip install -r requirements.txt
