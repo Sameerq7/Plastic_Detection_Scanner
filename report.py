@@ -165,7 +165,7 @@ def check_for_pyrolysis(object_type):
     # List of object types useful for pyrolysis (plastic types commonly used for pyrolysis)
     pyrolysis_compatible_types = [
         "polyethylene", "polypropylene", "polystyrene", "polyvinyl chloride", "polyethylene terephthalate",
-        "bottle", "cup", "cover", "wrapper", "bag", "can", "container", "cell phone", "remote", "toilet"
+        "bottle", "cup", "cover", "wrapper", "bag", "can", "container", "cell phone", "remote", "toilet","chair"
     ]
 
     # If the object type matches one of the compatible types, return True (useful for pyrolysis)
@@ -181,7 +181,7 @@ import os
 import time
 from reportlab.lib import colors
 
-def create_report_4(image_path, result, filename):
+def create_report_5(image_path, result, filename):
     # Ensure the reports folder exists
     if not os.path.exists('reports'):
         os.makedirs('reports')
@@ -246,6 +246,133 @@ def create_report_4(image_path, result, filename):
                 y_position -= 20
 
         c.showPage()  # End page for the object
+
+    # Save the PDF file
+    c.save()
+
+    return report_path
+
+
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+import os
+import time
+
+# Define a function to convert RGB to color names (a basic approach)
+def rgb_to_color_name(rgb):
+    # You can extend this function based on your requirements
+    color_names = {
+        (255, 0, 0): 'Red',
+        (0, 255, 0): 'Green',
+        (0, 0, 255): 'Blue',
+        (255, 255, 0): 'Yellow',
+        (0, 255, 255): 'Cyan',
+        (255, 0, 255): 'Magenta',
+        (0, 0, 0): 'Black',
+        (255, 255, 255): 'White',
+    }
+    return color_names.get(tuple(rgb), 'Unknown Color')  # Default to 'Unknown Color'
+
+def create_report_4(image_path, result, filename):
+    # Ensure the reports folder exists
+    if not os.path.exists('reports'):
+        os.makedirs('reports')
+
+    # Create a unique filename for the report
+    timestamp = int(time.time())
+    file_base_name = filename.split('.')[0]  # Get the name without extension
+    report_filename = f"plastic_detection_report_{timestamp}.pdf"
+    report_path = os.path.join('reports', report_filename)
+
+    # Create a canvas for the PDF
+    c = canvas.Canvas(report_path, pagesize=letter)
+    width, height = letter
+
+    def draw_header_footer(page_num):
+        # Draw header
+        c.setFont("Helvetica-Bold", 10)
+        c.drawString(100, height - 20, "Plastic Detection Report - Image Analysis")
+        
+        # Draw footer
+        c.setFont("Helvetica", 10)  # Increased font size for better readability
+        contact_text = "Contact the owner"
+        c.drawString(100, 40, contact_text)  # Adjusted y-position to prevent overlap
+        c.linkURL("https://www.linkedin.com/in/shaik-sameer-hussain-b88323250", (100, 30, 400, 50))
+
+    # First page: Display logo (Favicon.png)
+    draw_header_footer(1)
+    c.drawImage(r"C:\Users\hp\Desktop\Plastic_detection\static\images\Favicon.png", 100, height - 150, width=200, height=150)
+    c.setFont("Helvetica-Bold", 24)
+    c.drawString(100, height - 250, "Plastic Detection Report")
+    c.setFont("Helvetica", 12)
+    c.drawString(100, height - 280, f"Analysis for {filename}")
+    c.showPage()  # End first page
+
+    # Second page: Display the uploaded image
+    draw_header_footer(2)
+    c.setFont("Helvetica-Bold", 18)
+    c.drawString(100, height - 100, "This is the image we have analyzed:")
+    c.drawImage(image_path, 100, height - 450, width=400, height=300)
+    c.showPage()  # End second page
+
+    # Third page: Number of objects and their names
+    draw_header_footer(3)
+    c.setFont("Helvetica-Bold", 18)
+    c.drawString(100, height - 100, "Number of Objects Detected and Their Names:")
+    y_position = height - 130  # Starting position for list
+    for obj in result['objects']:
+        c.setFont("Helvetica", 12)
+        c.drawString(100, y_position, f"- {obj['type']}")
+        y_position -= 20  # Adjust the y-position for each object
+    c.showPage()  # End third page
+
+    # From the 4th page onwards: Description of each object
+    for idx, obj in enumerate(result['objects']):
+        draw_header_footer(4 + idx)
+        c.setFont("Helvetica-Bold", 18)
+        c.drawString(100, height - 100, f"Object: {obj['type']}")
+
+        # Display object attributes
+        c.setFont("Helvetica", 12)
+        c.drawString(100, height - 180, f"Shape: {obj['shape']}")
+        
+        # Convert RGB to color name
+        color_name = rgb_to_color_name(obj['color'])  # Assuming color is in RGB format
+        c.drawString(100, height - 200, f"Color: {color_name}")
+        
+        c.drawString(100, height - 220, f"Confidence: {obj['confidence']:.2f}")
+
+        useful_for_pyrolysis = check_for_pyrolysis(obj['type'])
+        c.drawString(100, height - 240, f"Useful for Pyrolysis: {'Yes' if useful_for_pyrolysis else 'No'}")
+
+        # Display additional attributes if available
+        if 'additional_attributes' in obj:
+            y_position = height - 260
+            for attribute, value in obj['additional_attributes'].items():
+                c.drawString(100, y_position, f"{attribute}: {value}")
+                y_position -= 20
+
+        # Add dynamic closing statement for the object
+        c.setFont("Helvetica", 10)
+        c.drawString(100, height - 280, f"Conclusion: The detected object is analyzed based on its physical and chemical properties, providing insights into its composition and utility.")
+
+        c.showPage()  # End page for the object
+
+    # Last page: Contact information
+    draw_header_footer("Final")
+    c.setFont("Helvetica-Bold", 14)
+    c.drawString(100, height - 100, "Thank you for using our Image Analysis service!")
+    c.setFont("Helvetica", 12)
+    c.drawString(100, height - 130, "If you have any doubts or inquiries, feel free to contact us:")
+
+    # Link to LinkedIn profile
+    c.setFont("Helvetica-Bold", 12)
+    contact_text = "Contact: Click here to visit LinkedIn"
+    c.drawString(100, height - 160, contact_text)
+    # Make the contact text clickable and link to LinkedIn profile
+    c.linkURL("https://www.linkedin.com/in/shaik-sameer-hussain-b88323250", (100, height - 170, 400, height - 150))
+
+    c.showPage()  # End last page
 
     # Save the PDF file
     c.save()
