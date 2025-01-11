@@ -28,29 +28,29 @@ A web application that analyzes uploaded images to determine whether the materia
 - pip (Python package manager)
 
 ### Steps to Run the Project
-1. Clone the repository:
+1. **Clone the repository**:
    ```bash
-   git clone <repository-url>
-   cd <repository-folder>
- ```
+   git clone https://github.com/Sameerq7/Plastic_Detection_Scanner.git
+   cd Plastic_Detection_Scanner
+   ```
 
-2. Create a virtual environment:
+2. **Create a virtual environment**:
    ```bash
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
- ```
+   ```
 
-3. Install dependencies:
+3. **Install dependencies**:
    ```bash
    pip install -r requirements.txt
    ```
 
-4. Run the application:
+4. **Run the application**:
    ```bash
    python app.py
    ```
 
-5. Open your browser and navigate to:
+5. **Open your browser and navigate to**:
    ```
    http://127.0.0.1:5000
    ```
