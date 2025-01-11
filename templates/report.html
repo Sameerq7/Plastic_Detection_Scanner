@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Report - Plastic Detection</title>
+    <link rel="icon" href="static/images/Favicon.png" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7fc;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        h1 {
+            color: #11BC74;
+            font-size: 3em;
+            margin-top: 20px;
+        }
+
+        .tagline {
+            font-size: 1.2em;
+            margin-top: 15px;
+            color: #555;
+        }
+
+        .upload-form {
+            margin-top: 20px;
+        }
+
+        .upload-button {
+            background-color: #11BC74;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .upload-button:hover {
+            background-color: #0e9c5a;
+            transform: scale(1.1);
+        }
+
+        .status {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .report-link {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #11BC74;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Generate Plastic Detection Report</h1>
+        <div class="tagline">
+            <p>Upload an image to generate a report of plastic detection analysis.</p>
+        </div>
+
+        <!-- Error message (if any) -->
+        {% if error %}
+        <div class="status error">{{ error }}</div>
+        {% endif %}
+
+        <!-- Success message and report link -->
+        <!-- Success message and report link -->
+        {% if result %}
+        <div class="status">
+            <p>Report generated successfully! <a href="{{ report_url }}" target="_blank">Download the report</a></p>
+            <p>Filename: {{ filename }}</p>
+        </div>
+        {% endif %}
+
+
+        <!-- Upload Form -->
+        <form action="/generate_report" method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" id="fileInput" accept="image/*" required>
+            <button type="submit" class="upload-button">Generate Report</button>
+        </form>
+    </div>
+</body>
+
+</html>

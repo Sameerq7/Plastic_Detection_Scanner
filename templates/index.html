@@ -162,6 +162,7 @@
             <button id="startScan" class="scan-button">Start Scan</button>
             <button id="stopScan" class="scan-button">Stop Scan</button>
             <button id="uploadButton" class="scan-button">Upload Image for Analysis</button>
+            <button id="reportButton" class="scan-button">Download Report</button>
         </div>
 
         <!-- Scan Status Section -->
@@ -216,6 +217,9 @@
             // Redirect to upload page
             document.getElementById('uploadButton').addEventListener('click', () => {
                 window.location.href = '/upload';
+            });
+            document.getElementById('reportButton').addEventListener('click', () => {
+                window.location.href = '/generate_report';
             });
         </script>
         

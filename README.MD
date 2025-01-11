@@ -38,7 +38,7 @@ A web application that analyzes uploaded images to determine whether the materia
    ```bash
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+ ```
 
 3. Install dependencies:
    ```bash
