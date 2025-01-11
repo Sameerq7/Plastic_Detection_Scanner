@@ -107,7 +107,7 @@ def generate_report():
                     return render_template('report.html', error=error_msg)
 
                 # Generate the report
-                report_path = create_report_2(filepath, result, filename)
+                report_path = create_report_4(filepath, result, filename)
                 if not report_path:
                     error_msg = "Failed to generate the report."
                     app.logger.error(error_msg)
