@@ -100,14 +100,14 @@ def generate_report():
 
             try:
                 # Analyze the image
-                result = analyse.analyze_image(filepath)
+                result = analyse.analyze_image_report(filepath)
                 if not result:
                     error_msg = "Failed to analyze the image."
                     app.logger.error(error_msg)
                     return render_template('report.html', error=error_msg)
 
                 # Generate the report
-                report_path = create_report(filepath, result, filename)
+                report_path = create_report_2(filepath, result, filename)
                 if not report_path:
                     error_msg = "Failed to generate the report."
                     app.logger.error(error_msg)

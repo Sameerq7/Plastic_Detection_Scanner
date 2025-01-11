@@ -59,3 +59,53 @@ def generate_pdf(results, image_name):
     c.save()
 
     return pdf_filename
+
+
+def analyze_image_report(image_path):
+    """
+    Analyze the image using YOLOv5 and extract object details such as type, shape, and color.
+    Returns a dictionary containing the analysis results.
+    """
+    # Load image
+    img = Image.open(image_path)
+    
+    # Perform inference using YOLOv5
+    results = model(img)
+    
+    # Results inference
+    labels = results.names  # Get object class labels
+    predictions = results.pred[0]  # The predicted bounding boxes, class labels, and confidence scores
+    
+    object_details = []
+    for prediction in predictions:
+        # Each prediction contains the following [x1, y1, x2, y2, confidence, class]
+        x1, y1, x2, y2, confidence, class_idx = prediction.tolist()
+        
+        # Get object label (type)
+        object_type = labels[int(class_idx)]
+        
+        # Object shape can be described by the aspect ratio (width / height) of the bounding box
+        width = x2 - x1
+        height = y2 - y1
+        aspect_ratio = width / height if height != 0 else 0
+        
+        # Color (could be inferred from the average color inside the bounding box)
+        img_array = np.array(img)
+        cropped_img = img_array[int(y1):int(y2), int(x1):int(x2)]
+        avg_color = np.mean(cropped_img, axis=(0, 1))  # Average color in RGB
+        
+        # Add object details to list
+        object_details.append({
+            "type": object_type,
+            "shape": "aspect ratio: {:.2f}".format(aspect_ratio),
+            "color": f"RGB: {avg_color.astype(int)}",
+            "confidence": confidence
+        })
+
+    # Return the analysis result as a dictionary
+    result = {
+        "description": f"Detected {len(object_details)} objects",
+        "objects": object_details
+    }
+
+    return result
