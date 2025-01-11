@@ -59,7 +59,7 @@ A web application that analyzes uploaded images to determine whether the materia
 
 ## Project Structure
 ```
-<Plastic_detection>/
+<Plastic_Detection_Scanner>/
 │
 ├── app.py               # Main Flask application
 ├── analyse.py           # Image analysis logic using YOLOv5
@@ -72,16 +72,18 @@ A web application that analyzes uploaded images to determine whether the materia
 │   └── styles.css       # Custom styling
 ├── uploads/             # Directory to store uploaded files
 ├── audio/               # Audio-related files (if any)
+├── reports/             # Directory for generated reports
 ├── yolov5s.pt           # Pretrained YOLOv5 model
 ├── test.py              # Testing script for the application
 ├── user_data.json       # User-related data (if required)
 ├── plastic-env/         # Virtual environment for dependencies
 ├── .gitignore           # Git ignore file
 ├── __pycache__/         # Compiled Python files
+├── report.py            # Report generation logic
+├── t2.py                # Another Python script
+├── t3.py                # Another Python script
 └── README.md            # Project documentation
-
 ```
-
 ---
 
 ## API Details
